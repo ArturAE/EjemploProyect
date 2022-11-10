@@ -1,0 +1,55 @@
+version: '3.3'
+
+services:
+  postgres:
+    image: postgres:latest
+    environment:
+      - POSTGRES_DB=store
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=1234
+    ports:
+      - 5432:5432
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=root@gmail.com
+      - PGADMIN_DEFAULT_PASSWORD=1234
+    ports:
+      - 5050:80
+
+  mysql:
+    image: mysql:5
+    environment:
+      - MYSQL_DATABASE=store
+      - MYSQL_USER=root
+      - MYSQL_ROOT_PASSWORD=1234
+      - MYSQL_PORT=3309
+    ports:
+      - 3309:3309
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      - MYSQL_ROOT_PASSWORD=1234
+      - PMA_HOST=mysql
+    ports:
+      - 8080:80
+
+#docker-compose ps -> ver contenedores ejecutandose
+#docker-compose down <name> -> baja todos los contenedores si no se le especifica un nombre
+#docker-compose up -d <name> -> pone a correr el contenedor el nuestro es postgres que es el nombre debajo de services
+#docker-compose exec postgres bash para meternos al contenedor y ver que hay dentro
+#psql -h localhost -d store  -U root -> para conectarnos a la base de datos, se usa el nombre y el usuario de la bd
+# \q+ para ver las tablas que hay dentro y para salir de ahi con \q
+#exit  -> para salir del contenedor
+
+#usar pgadmin en docker que seria para ver la db de forma visual
+#docker-compose up -d pgadmin -> nos conectamos a localhost:5050 en el navegador y ponemos el correo y contrasela de arriba, cremos un server y necesitamos la ip del contenedor de la bd
+#docker ps -> lista los contenedores y da un poco mas de informacion como el id
+#docker inspect <id_contenedor> -> para ver mas informacion (ip) del contenedor que seleccionamos y en la parte de abajo en IPAdress aparece la ip a la que hay que conectarnos en la configuracion del server
